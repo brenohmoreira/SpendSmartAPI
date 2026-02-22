@@ -43,7 +43,7 @@ func (u *UserUseCase) Create(ctx context.Context, user *domain.User) error {
 		return errors.New("User already exists")
 	}
 
-	encryptPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	encryptPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 
 	if err != nil {
 		return errors.New("Internal encryption error")
