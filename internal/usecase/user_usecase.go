@@ -21,10 +21,18 @@ func (u *UserUseCase) Create(ctx context.Context, user *domain.User) error {
 	if user.Name == "" {
 		return errors.New("Name is required")
 	}
-
 	if user.Email == "" {
 		return errors.New("Email is required")
 	}
+	if user.Phone == "" {
+		return errors.New("Phone is required")
+	}
+	if user.Password == "" {
+		return errors.New("Password is required")
+	}
+
+	// Criptogra senha
+	// Verifica se existe
 
 	return u.repository.Create(ctx, user)
 }
