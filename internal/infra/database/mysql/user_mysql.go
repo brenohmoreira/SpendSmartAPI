@@ -53,7 +53,7 @@ func (r *UserMySQLRepository) FindAll(ctx context.Context) ([]domain.User, error
 
 	defer rows.Close()
 
-	var users []domain.User
+	users := make([]domain.User, 0)
 
 	for rows.Next() {
 		var row domain.User
