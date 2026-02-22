@@ -5,6 +5,8 @@ import (
 	"SpendSmartAPI/internal/repository"
 	"context"
 	"errors"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserUseCase struct {
@@ -31,8 +33,23 @@ func (u *UserUseCase) Create(ctx context.Context, user *domain.User) error {
 		return errors.New("Password is required")
 	}
 
-	// Criptogra senha
-	// Verifica se existe
+	existUser, err := u.repository.FindByEmail(ctx, user.Email)
+
+	if err != nil {
+		return errors.New("Internal error while validating email existence")
+	}
+
+	if existUser != nil {
+		return errors.New("User already exists")
+	}
+
+	encryptPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+
+	if err != nil {
+		return errors.New("Internal encryption error")
+	}
+
+	user.Password = string(encryptPassword)
 
 	return u.repository.Create(ctx, user)
 }

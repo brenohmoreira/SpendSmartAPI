@@ -90,3 +90,23 @@ func (r *UserMySQLRepository) FindById(ctx context.Context, id int) (*domain.Use
 
 	return &u, nil
 }
+
+func (r *UserMySQLRepository) FindByEmail(ctx context.Context, email string) (*domain.User, error) {
+	query := `
+		SELECT id, name, email, password, phone FROM user
+		WHERE email = ?
+	`
+
+	var u domain.User
+	err := r.db.QueryRowContext(ctx, query, email).Scan(&u.ID, &u.Name, &u.Email, &u.Password, &u.Phone)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &u, nil
+}
